@@ -9,6 +9,7 @@ import { WishlistsModule } from './wishlists/wishlists.module';
 import { OffersModule } from './offers/offers.module';
 import { AuthModule } from './auth/auth.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,4 +28,5 @@ import { AuthModule } from './auth/auth.module';
   controllers: [],
   providers: [DatabaseConfigFactory],
 })
-export class AppModule {}
+export class AppModule {
+}
