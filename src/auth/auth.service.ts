@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
+import { SigninDto } from './dto/signin.dto';
+import { compare as compareHash } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+  ) {}
+
+  async signin(signinDto: SigninDto) {
+    const user = await this.validate(signinDto);
+    const payload = { id: user.id };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async validate(signinDto: SigninDto) {
+    console.log('validate works');
+    const user = await this.usersService.findOne(signinDto.username);
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    if (!user || !(await compareHash(signinDto.password, user.password))) {
+      throw new UnauthorizedException('Неправильный логин или пароль');
+    }
+    return user;
   }
 }

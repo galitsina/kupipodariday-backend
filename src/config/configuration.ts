@@ -6,4 +6,8 @@ export default () => ({
     password: process.env.DB_PASSWORD || 'student',
     database: process.env.DB_NAME || 'kupipodariday',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secret',
+    ttl: process.env.JWT_TTL || '3600s',
+  },
 });
