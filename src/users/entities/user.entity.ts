@@ -41,8 +41,7 @@ export class User {
   @IsEmail()
   email: string;
 
-  @Column()
-  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)

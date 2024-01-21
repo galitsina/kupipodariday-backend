@@ -6,19 +6,26 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Auth } from 'src/auth/entities/auth.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Get('me')
-  // getme() {
-
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getme(@Req() req: any) {
+    console.log('req.user', req.user);
+    return this.usersService.findById(req.user.id);
+  }
 
   @Post('find')
   findMany(@Body() query: string) {

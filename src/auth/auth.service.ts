@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async signin(signinDto: SigninDto) {
-    const user = await this.validate(signinDto);
+    const user = await this.usersService.findOne(signinDto.username);
     const payload = { id: user.id };
 
     return {
@@ -21,8 +21,9 @@ export class AuthService {
   }
 
   async validate(signinDto: SigninDto) {
-    console.log('validate works');
-    const user = await this.usersService.findOne(signinDto.username);
+    const user = await this.usersService.findOneWithPassword(
+      signinDto.username,
+    );
 
     if (!user || !(await compareHash(signinDto.password, user.password))) {
       throw new UnauthorizedException('Неправильный логин или пароль');

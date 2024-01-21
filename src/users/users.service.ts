@@ -25,15 +25,27 @@ export class UsersService {
     return user;
   }
 
+  async findOneWithPassword(username: string) {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .addSelect(['user.password'])
+      .getOne();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   async findMany(query: string) {
     return this.usersRepository.find({
       where: [{ username: Like(`%${query}%`) }, { email: Like(`%${query}%`) }],
     });
   }
 
-  // async findByEmail(email: string) {
-  //   return this.usersRepository.findOne({ where: { email } });
-  // }
+  async findById(id: number) {
+    return this.usersRepository.findOne({ where: { id } });
+  }
 
   async updateById(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.preload({

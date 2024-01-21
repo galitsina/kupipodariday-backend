@@ -14,13 +14,11 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('signin')
   signin(@Body() signinDto: SigninDto) {
-    console.log('AuthController works');
     return this.authService.signin(signinDto);
   }
 
   @Post('signup')
   signup(@Body() signupDto: CreateUserDto) {
-    console.log('AuthController works');
     return this.userService.signup(signupDto);
   }
 }
