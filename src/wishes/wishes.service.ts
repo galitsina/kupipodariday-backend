@@ -11,17 +11,18 @@ import { UsersService } from 'src/users/users.service';
 export class WishesService {
   constructor(
     @InjectRepository(Wish)
-    private wishesRepository: Repository<Wish>, // @InjectRepository(User) // private usersService: UsersService,
+    private wishesRepository: Repository<Wish>,
+    private usersService: UsersService,
   ) {}
 
-  async create(createWishDto: CreateWishDto, userId = 0) {
-    // const owner = await this.usersService.findOne(userId);
-    // const wish = await this.wishesRepository.create({
-    //   ...createWishDto,
-    //   owner,
-    // });
-    // return this.wishesRepository.save(wish);
-    return '';
+  async create(userId: number, createWishDto: CreateWishDto) {
+    console.log('wishes service create');
+    const owner = await this.usersService.findById(userId);
+    const wish = await this.wishesRepository.create({
+      ...createWishDto,
+      owner,
+    });
+    return this.wishesRepository.save(wish);
   }
 
   findAll() {

@@ -48,6 +48,15 @@ export class UsersService {
   }
 
   async updateById(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.password) {
+      await hash(updateUserDto.password, 10)
+        .then((hash) => {
+          updateUserDto.password = hash;
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
+    }
     const user = await this.usersRepository.preload({
       id: id,
       ...updateUserDto,
@@ -57,7 +66,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return this.usersRepository.save(user);
   }
 
   // async removeById(id: number) {
