@@ -16,13 +16,26 @@ export class WishesService {
   ) {}
 
   async create(userId: number, createWishDto: CreateWishDto) {
-    console.log('wishes service create');
     const owner = await this.usersService.findById(userId);
     const wish = await this.wishesRepository.create({
       ...createWishDto,
       owner,
     });
     return this.wishesRepository.save(wish);
+  }
+
+  async returnLast() {
+    return this.wishesRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 40,
+    });
+  }
+
+  async returnTopWishes() {
+    return this.wishesRepository.find({
+      order: { copied: 'DESC' },
+      take: 20,
+    });
   }
 
   findAll() {
