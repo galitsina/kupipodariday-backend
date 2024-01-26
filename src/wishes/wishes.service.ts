@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { Repository } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -38,19 +37,61 @@ export class WishesService {
     });
   }
 
-  findAll() {
-    return `This action returns all wishes`;
+  async findOne(id: number) {
+    const wish = await this.wishesRepository.findOne({
+      where: { id: id },
+      relations: { owner: true, offers: true },
+    });
+
+    if (!wish) {
+      throw new NotFoundException('Wish not found');
+    }
+
+    return wish;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} wish`;
+  async update(id: number, updateWishDto: UpdateWishDto) {
+    const wish = await this.wishesRepository.preload({
+      id: id,
+      ...updateWishDto,
+    });
+
+    if (!wish) {
+      throw new NotFoundException('Wish not found');
+    }
+
+    return this.wishesRepository.save(wish);
   }
 
-  update(id: number, updateWishDto: UpdateWishDto) {
-    return `This action updates a #${id} wish`;
+  async removeById(id: number) {
+    const wish = await this.findOne(id);
+    return this.wishesRepository.remove(wish);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} wish`;
+  async copyWish(wishId: number, userId: number) {
+    const wish = await this.findOne(wishId);
+
+    if (!wish) {
+      throw new NotFoundException('Wish not found');
+    }
+
+    const owner = wish.owner.id;
+
+    if (owner === userId) {
+      throw new NotFoundException('You cannot copy your own wish');
+    }
+
+    wish.copied += 1;
+
+    const user = await this.usersService.findById(userId);
+    const copy = await this.wishesRepository.create({
+      ...wish,
+      owner: user,
+      copied: 0,
+      id: undefined,
+    });
+
+    this.wishesRepository.save(wish);
+    return this.wishesRepository.save(copy);
   }
 }

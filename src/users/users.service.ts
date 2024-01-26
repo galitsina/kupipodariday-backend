@@ -69,11 +69,6 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  // async removeById(id: number) {
-  //   const user = await this.findOne(id);
-  //   return this.usersRepository.remove(user);
-  // }
-
   async signup(createUserDto: CreateUserDto) {
     const user = await this.usersRepository.create(createUserDto);
 

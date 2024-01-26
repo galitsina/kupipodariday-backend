@@ -34,23 +34,23 @@ export class WishesController {
     return this.wishesService.returnTopWishes();
   }
 
-  @Get()
-  findAll() {
-    return this.wishesService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishesService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.wishesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishDto: UpdateWishDto) {
-    return this.wishesService.update(+id, updateWishDto);
+  update(@Param('id') id: number, @Body() updateWishDto: UpdateWishDto) {
+    return this.wishesService.update(id, updateWishDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.wishesService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.wishesService.removeById(id);
+  }
+
+  @Post(':id/copy')
+  copy(@Param('id') id: number, @Req() req: any) {
+    return this.wishesService.copyWish(id, req.user.id);
   }
 }
