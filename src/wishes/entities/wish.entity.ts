@@ -1,6 +1,7 @@
 import { IsUrl, Length } from 'class-validator';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
+import { DecimalColumnTransformer } from 'src/utils/entity-utils';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import {
   Column,
@@ -36,10 +37,18 @@ export class Wish {
   @IsUrl()
   image: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: new DecimalColumnTransformer(),
+  })
   price: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: new DecimalColumnTransformer(),
+  })
   raised: number;
 
   @Column()

@@ -1,4 +1,5 @@
 import { User } from 'src/users/entities/user.entity';
+import { DecimalColumnTransformer } from 'src/utils/entity-utils';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import {
   Column,
@@ -20,7 +21,11 @@ export class Offer {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: new DecimalColumnTransformer(),
+  })
   amount: number;
 
   @Column({ default: false })
