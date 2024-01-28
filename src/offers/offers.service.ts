@@ -21,17 +21,21 @@ export class OffersService {
     await queryRunner.startTransaction();
 
     try {
-      const owner = await queryRunner.manager.findOne(User, {
+      const offerOwner = await queryRunner.manager.findOne(User, {
         where: { id: userId },
       });
 
-      if (!owner) {
+      if (!offerOwner) {
         throw new BadRequestException('User not found');
       }
 
       const wish = await queryRunner.manager.findOne(Wish, {
         where: { id: itemId },
       });
+
+      if (wish.owner.id === userId) {
+        throw new BadRequestException('You cannot offer on your own wish');
+      }
 
       const raised: number = amount + wish.raised;
       if (raised > wish.price) {
@@ -47,7 +51,7 @@ export class OffersService {
       await queryRunner.commitTransaction();
       return await this.offersRepository.save({
         ...createOfferDto,
-        user: owner,
+        user: offerOwner,
         amount,
         item: wish,
       });

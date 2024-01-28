@@ -35,7 +35,7 @@ export class Wishlist {
   image: string;
 
   @ManyToOne(() => User, (user) => user.wishlists)
-  user: User;
+  owner: User;
 
   @ManyToMany(() => Wish, (wish) => wish.wishlists)
   items: Wish[];

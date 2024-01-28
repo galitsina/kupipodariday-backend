@@ -56,6 +56,12 @@ export class WishesService {
       ...updateWishDto,
     });
 
+    if (wish.offers.length > 0 && updateWishDto.price) {
+      throw new NotFoundException(
+        'You cannot change price of wish with offers',
+      );
+    }
+
     if (!wish) {
       throw new NotFoundException('Wish not found');
     }

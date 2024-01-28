@@ -26,7 +26,7 @@ export class AuthService {
     );
 
     if (!user || !(await compareHash(signinDto.password, user.password))) {
-      throw new UnauthorizedException('Неправильный логин или пароль');
+      throw new UnauthorizedException('Incorrect login or password');
     }
     return user;
   }
