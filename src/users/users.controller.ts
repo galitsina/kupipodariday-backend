@@ -28,6 +28,12 @@ export class UsersController {
     return this.usersService.updateById(req.user.id, updateStudentDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me/wishes')
+  getMyWishes(@Req() req: any) {
+    return this.usersService.findWishes(req.user.id);
+  }
+
   @Post('find')
   findMany(@Body() query: string) {
     return this.usersService.findMany(query);
@@ -41,5 +47,11 @@ export class UsersController {
   @Get(':username')
   findOne(@Param('username') username: string) {
     return this.usersService.findOne(username);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':username/wishes')
+  findWishes(@Param('username') username: string) {
+    return this.usersService.findWishesByUsername(username);
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { Repository } from 'typeorm';
@@ -57,7 +61,7 @@ export class WishesService {
     });
 
     if (wish.offers.length > 0 && updateWishDto.price) {
-      throw new NotFoundException(
+      throw new BadRequestException(
         'You cannot change price of wish with offers',
       );
     }
@@ -84,7 +88,7 @@ export class WishesService {
     const owner = wish.owner.id;
 
     if (owner === userId) {
-      throw new NotFoundException('You cannot copy your own wish');
+      throw new BadRequestException('You cannot copy your own wish');
     }
 
     wish.copied += 1;

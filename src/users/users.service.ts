@@ -17,6 +17,27 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
+  async findWishes(id: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['wishes'],
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user.wishes;
+  }
+  async findWishesByUsername(username: string) {
+    const user = await this.usersRepository.findOne({
+      where: { username },
+      relations: ['wishes'],
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user.wishes;
+  }
+
   async findOne(username: string) {
     const user = await this.usersRepository.findOneBy({ username });
     if (!user) {
