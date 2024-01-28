@@ -47,6 +47,7 @@ export class Wish {
   @Column('decimal', {
     precision: 10,
     scale: 2,
+    default: 0,
     transformer: new DecimalColumnTransformer(),
   })
   raised: number;

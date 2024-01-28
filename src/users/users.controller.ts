@@ -11,6 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -35,8 +36,8 @@ export class UsersController {
   }
 
   @Post('find')
-  findMany(@Body() query: string) {
-    return this.usersService.findMany(query);
+  findMany(@Body() dto: FindUserDto) {
+    return this.usersService.findMany(dto.query);
   }
 
   @Get()
