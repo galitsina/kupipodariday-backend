@@ -24,13 +24,13 @@ export class OffersService {
       const offerOwner = await queryRunner.manager.findOne(User, {
         where: { id: userId },
       });
-
       if (!offerOwner) {
         throw new BadRequestException('User not found');
       }
 
       const wish = await queryRunner.manager.findOne(Wish, {
         where: { id: itemId },
+        relations: { owner: true },
       });
 
       if (wish.owner.id === userId) {
@@ -57,7 +57,7 @@ export class OffersService {
       });
     } catch (err) {
       await queryRunner.rollbackTransaction();
-      throw new BadRequestException(err);
+      throw err;
     } finally {
       await queryRunner.release();
     }

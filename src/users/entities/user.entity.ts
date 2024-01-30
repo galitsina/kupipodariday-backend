@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsUrl, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsUrl, Length } from 'class-validator';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
@@ -25,9 +25,11 @@ export class User {
   @Column({ unique: true })
   @Length(2, 30)
   @IsNotEmpty()
+  @IsString()
   username: string;
 
   @Column({ default: 'Пока ничего не рассказал о себе' })
+  @IsString()
   @Length(2, 200)
   about: string;
 

@@ -1,4 +1,4 @@
-import { IsUrl, Length } from 'class-validator';
+import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DecimalColumnTransformer } from 'src/utils/entity-utils';
@@ -27,10 +27,12 @@ export class Wish {
   updatedAt: Date;
 
   @Column()
+  @IsString()
   @Length(1, 250)
   name: string;
 
   @Column()
+  @IsUrl()
   link: string;
 
   @Column()
@@ -42,6 +44,7 @@ export class Wish {
     scale: 2,
     transformer: new DecimalColumnTransformer(),
   })
+  @IsNumber()
   price: number;
 
   @Column('decimal', {
@@ -50,13 +53,16 @@ export class Wish {
     default: 0,
     transformer: new DecimalColumnTransformer(),
   })
+  @IsNumber()
   raised: number;
 
   @Column()
+  @IsString()
   @Length(1, 1024)
   description: string;
 
   @Column({ default: 0 })
+  @IsNumber()
   copied: number;
 
   @ManyToOne(() => User, (user) => user.wishes)

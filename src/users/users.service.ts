@@ -70,13 +70,12 @@ export class UsersService {
 
   async updateById(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
-      await hash(updateUserDto.password, 10)
-        .then((hash) => {
-          updateUserDto.password = hash;
-        })
-        .catch((err) => {
-          throw new Error(err);
-        });
+      try {
+        const hashPassword = await hash(updateUserDto.password, 10);
+        updateUserDto.password = hashPassword;
+      } catch (err) {
+        throw new Error(err);
+      }
     }
     const user = await this.usersRepository.preload({
       id: id,
@@ -93,13 +92,12 @@ export class UsersService {
   async signup(createUserDto: CreateUserDto) {
     const user = await this.usersRepository.create(createUserDto);
 
-    await hash(user.password, 10)
-      .then((hash) => {
-        user.password = hash;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
+    try {
+      const hashValue = await hash(user.password, 10);
+      user.password = hashValue;
+    } catch (err) {
+      throw new Error(err);
+    }
 
     return this.usersRepository.save(user);
   }

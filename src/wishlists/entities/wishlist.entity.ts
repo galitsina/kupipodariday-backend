@@ -1,4 +1,4 @@
-import { IsUrl, Length } from 'class-validator';
+import { IsString, IsUrl, Length } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import {
@@ -23,10 +23,12 @@ export class Wishlist {
   updatedAt: Date;
 
   @Column()
+  @IsString()
   @Length(1, 250)
   name: string;
 
   @Column()
+  @IsString()
   @Length(1, 1500)
   description: string;
 

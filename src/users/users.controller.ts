@@ -35,16 +35,19 @@ export class UsersController {
     return this.usersService.findWishes(req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('find')
   findMany(@Body() dto: FindUserDto) {
     return this.usersService.findMany(dto.query);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':username')
   findOne(@Param('username') username: string) {
     return this.usersService.findOne(username);

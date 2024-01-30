@@ -1,3 +1,4 @@
+import { IsNumber } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { DecimalColumnTransformer } from 'src/utils/entity-utils';
 import { Wish } from 'src/wishes/entities/wish.entity';
@@ -26,6 +27,7 @@ export class Offer {
     scale: 2,
     transformer: new DecimalColumnTransformer(),
   })
+  @IsNumber()
   amount: number;
 
   @Column({ default: false })
